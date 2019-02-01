@@ -1,0 +1,23 @@
+# py4lo
+language: python
+
+python:
+  - "3.7"
+
+cache: pip
+
+before_install:
+  - export PYTHONPATH=${PYTHONPATH}:/usr/lib/python3/dist-packages
+
+# command to run tests and install dependencies
+install:
+  # for coverage
+  - pip install codecov
+  - pip install pytest-cov
+
+# script
+script:
+  - python3.7 -m pytest --cov=yamft test
+
+after_success:
+  - codecov

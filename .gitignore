@@ -1,0 +1,16 @@
+# dirs
+.cache
+.idea
+venv
+
+# generated files
+*.pyc
+.pytest_cache
+.coverage
+
+# pypi
+build
+dist
+
+py4lo.egg-info
+py4lo.egg-info/*
