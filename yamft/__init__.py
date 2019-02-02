@@ -178,6 +178,9 @@ def ident(x):
 
 
 def merge(d1, d2):
+    """
+
+    """
     return {**d1, **d2}
 
 
@@ -242,12 +245,15 @@ def partial_r(func, *p_args, **p_kwargs):
 
     return wrapped
 
+
 def dot(*funcs):
     """Function must be starred in order to pass one argument.
 
     >>> from yamft.operator import add1, pow1
-    >>> dot(pow1(2), add1(10))(1)
-    121
+    >>> dot(pow1(2), add1(10))(2)
+    144
+    >>> dot(add1(10), pow1(2))(2)
+    14
 
     >>> import math
     >>> dot(math.sqrt, math.pow)(2, 8)

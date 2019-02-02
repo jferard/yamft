@@ -38,9 +38,46 @@ def curry(func):
     return wrapped
 
 
-def unlazy(f):
+def unlazy(func):
+    """
+
+
+    """
     def wrapped(*args, **kwargs):
         args = tuple([args[0]] + [lambda: arg for arg in args[1:]])
-        return f(*args, **kwargs)
+        return func(*args, **kwargs)
 
     return wrapped
+
+
+def once(ret, *_args):
+    """
+    `v in once(value)` is equivalent to `v = value`.
+
+    >>> {k: v for t in ["a b", "c d"] for k, v in once(t.split())}
+    {'a': 'b', 'c': 'd'}
+
+    Optional parameters may be used for side effects, but won't
+    affect the result
+
+    >>> {k: v for t in ["a b", "c d"] for k, v in once(t.split(), print("parse '{}'".format(t)))}
+    parse 'a b'
+    parse 'c d'
+    {'a': 'b', 'c': 'd'}
+    """
+    return ret,
+
+
+def side(*_args):
+    """
+    Perform a side effect and return True.
+
+    >>> seen = set()
+    >>> [v for v in [1,2,4,2,7,1,7,4,3] if v not in seen and side(seen.add(v))]
+    [1, 2, 4, 7, 3]
+
+    :param _args:
+    :return:
+    """
+    return True
+
