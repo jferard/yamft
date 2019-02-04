@@ -41,6 +41,8 @@ def curry(func):
 def unlazy(func):
     """
 
+    >>> unlazy(lambda x, y: x + y())(1, 2)
+    3
 
     """
     def wrapped(*args, **kwargs):
@@ -81,3 +83,12 @@ def side(*_args):
     """
     return True
 
+
+def filter0(iterable):
+    """Shortcut for `filter(None, ...)`
+
+    >>> list(filter0([1,0,2,3,0,4]))
+    [1, 2, 3, 4]
+
+    """
+    return filter(None, iterable)
