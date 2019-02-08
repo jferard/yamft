@@ -17,6 +17,9 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import operator
+import functools
+
 
 def yamft_wraps(qualname, doc):
     """A YAMFT version of functools @wraps"""
@@ -108,20 +111,10 @@ def maybe(either_value):
     return () if v is None else (v,)
 
 
-def fst(xs):
-    return xs[0]
-
-
-def snd(xs):
-    return xs[1]
-
-
-def thd(xs):
-    return xs[2]
-
-
-def fth(xs):
-    return xs[3]
+fst = operator.itemgetter(0)
+snd = operator.itemgetter(1)
+thd = operator.itemgetter(2)
+fth = operator.itemgetter(3)
 
 
 # The MAP section
@@ -262,6 +255,9 @@ def dot(*funcs):
     >>> dot(math.sqrt, star(math.pow), divmod)(23, 3)
     7.0
 
+    >>> dot(float, snd, str.split)('-- 2.5 --')
+    2.5
+
     """
     @yamft_wraps(f"dot_{funcs}", "Same as {}".format(".".join(map(str, funcs))))
     def wrapped(*args, **kwargs):
@@ -276,7 +272,8 @@ def dot(*funcs):
         return ret
     return wrapped
 
+
+from yamft.operator import *
 from yamft.comprehension import *
 from yamft.incubator import *
 from yamft.map_fold import *
-

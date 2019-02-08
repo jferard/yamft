@@ -48,6 +48,36 @@ class Box:
         self._value = func(self._value)
         return prev,
 
+class BoxB:
+    """
+    """
+    def __init__(self, value):
+        if value is not None:
+            self._next = value
+            self._buf = [None]
+        else:
+            self._buf = [None]
+
+    def set(self, value):
+        print("set", value, self._buf)
+        self._next = value
+        self._buf.append(value)
+        return True
+
+    def get(self):
+        while self._next is not None:
+            print("get", self._next, self._buf)
+            yield self._next
+            # optional set call goes here
+            self._next = self._buf.pop()
+
+    def iterate(self, func, test=None):
+        while self._next is not None:
+            yield self._next
+            value = func(self._next)
+            self._next = value
+            if test is not None and not test(value):
+                self._next = None
 
 def try_or(try_func, *args, **kwargs):
     """

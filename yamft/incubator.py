@@ -17,6 +17,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from functools import partial
+from yamft import fst, snd, dot
 
 
 def curry(func):
@@ -84,11 +85,55 @@ def side(*_args):
     return True
 
 
-def filter0(iterable):
-    """Shortcut for `filter(None, ...)`
+filter0 = partial(filter, None)
 
-    >>> list(filter0([1,0,2,3,0,4]))
-    [1, 2, 3, 4]
 
+def map_k(func, iterable):
     """
-    return filter(None, iterable)
+    Add a key after the value to create a tuple `(v, func(v))`
+    for every `v` in `iterable`.
+
+    >>> from yamft import add1
+    >>> list(map_k(add1(2), range(5)))
+    [(0, 2), (1, 3), (2, 4), (3, 5), (4, 6)]
+    """
+
+    return map(lambda v: (v, func(v)), iterable)
+
+
+sorted_k = partial(sorted, key=snd)
+collect = partial(map, fst)
+
+
+def filter_k(func, iterable):
+    """
+    Input and output: tuples (value, key)
+
+    >>> from yamft import even, add1
+    >>> from operator import neg
+    >>> list(filter_k(even, (map_k(dot(neg, add1(1)), range(5)))))
+    [(1, -2), (3, -4)]
+    """
+    if func is None:
+            func = bool
+    return filter(dot(func, snd), iterable)
+
+
+def filter0_k(iterable):
+    """
+
+    >>> from yamft import sub1
+    >>> list(filter0_k(map_k(sub1(2), range(5))))
+    [(0, -2), (1, -1), (3, 1), (4, 2)]
+    """
+    return filter(dot(bool, snd), iterable)
+
+
+def filter_map(func, iterable):
+    """
+
+    >>> from yamft import either
+    >>> list(filter_map(either(float, ValueError), ["1","a","3","4"]))
+    [1.0, 3.0, 4.0]
+    """
+    return map(fst, filter(lambda e: snd(e) is None, map(func, iterable)))

@@ -16,7 +16,9 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from yamft import star
+
+from yamft import star, dot
+
 
 def map_star(func, *iterables):
     """A version of map that unpacks the zipped tuples into positional arguments
@@ -28,9 +30,21 @@ def map_star(func, *iterables):
     return map(star(func), *iterables)
 
 
-def map_compose(funcs, *iterables):
-    """A version of map that composes the functions before applying map"""
-    return map(compose(*funcs), *iterables)
+def map_dot(*args):
+    """A version of map that composes the functions before applying map
+
+    >>> from yamft import snd
+    >>> list(map_dot(snd, divmod, [10, 11], [3, 3]))
+    [1, 2]
+    >>> list(map_dot(snd, divmod))
+    Traceback (most recent call last):
+    ...
+    TypeError: map() must have at least two arguments.
+    """
+    for i, arg in enumerate(args):
+        if "__call__" not in dir(arg):
+            return map(dot(*args[:i]), *args[i:])
+    return map(dot(*args))
 
 
 def apply_all(funcs, *iterables):

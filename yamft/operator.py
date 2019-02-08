@@ -123,6 +123,14 @@ def is_not1(b):
         return a is not b
     return wrapped
 
+
+def is_none(a):
+    return a is None
+
+
+def is_not_none(a):
+    return a is not None
+
 # Mathematical/Bitwise Operations *********************************************#
 
 
