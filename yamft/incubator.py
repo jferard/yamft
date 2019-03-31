@@ -190,3 +190,20 @@ def auto_zip(iterable, *funcs):
         return zip(it, *new_its)
     else:
         return ((e, e) for e in iterable)
+
+
+def dict_filter(key, d):
+    """
+    >>> dict_filter(['a'], {'a':1, 'B':2})
+    {'a': 1}
+    >>> dict_filter(str.isupper, {'a':1, 'B':2})
+    {'B': 2}
+    >>> from yamft import dot, gt1
+    >>> dict_filter(dot(gt1(2), len), {'abc':1, 'ef':2})
+    {'abc': 1}
+    """
+    if callable(key):
+        return {k: v for k, v in d.items() if key(k)}
+    else:
+        s = set(key)
+        return {k: v for k, v in d.items() if k in s}
