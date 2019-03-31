@@ -51,6 +51,15 @@ class Examples(unittest.TestCase):
                           {'date': '2019-03-02', 'id': 2, 'val': 12.9}],
                          list(map_star(merge, group_by(dget('id'), L).values())))
 
+    def test2(self):
+        from yamft import map_values, group_by, fst, star
+        from itertools import chain
+        self.assertEqual({1: [(1, [2, 3]), (1, [5, 6])], 10: [(10, [20, 30])]}, group_by(fst, [(1, [2, 3]), (10, [20, 30]), (1, [5, 6])]))
+        self.assertEqual({1: [2, 3, 5, 6], 10: [20, 30]}, map_values(dot(list, star(chain), partial(map, snd)),
+                        group_by(fst, [(1, [2, 3]), (10, [20, 30]), (1, [5, 6])])))
+        self.assertEqual({1: [2, 3, 5, 6], 10: [20, 30]}, map_values(lambda v: [e for f in v for e in f[1]],
+                        group_by(fst, [(1, [2, 3]), (10, [20, 30]), (1, [5, 6])])))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -74,6 +74,7 @@ Test
 .. code-block:: bash
 
     > pytest --doctest-modules
+    > pytest test/*
 
 Help
 ----

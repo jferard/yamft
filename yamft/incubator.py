@@ -146,6 +146,15 @@ def group_by(key, iterable):
     >>> from yamft import mod1
     >>> group_by(mod1(2), range(10))
     {0: [0, 2, 4, 6, 8], 1: [1, 3, 5, 7, 9]}
+
+    >>> from yamft import map_values, group_by, fst, star
+    >>> from itertools import chain
+    >>> group_by(fst, [(1, [2,3]), (10,[20,30]), (1,[5,6])])
+    {1: [(1, [2, 3]), (1, [5, 6])], 10: [(10, [20, 30])]}
+    >>> map_values(dot(list, star(chain), partial(map, snd)), group_by(fst, [(1, [2,3]), (10,[20,30]), (1,[5,6])]))
+    {1: [2, 3, 5, 6], 10: [20, 30]}
+    >>> map_values(lambda v:[e for f in v for e in f[1]], group_by(fst, [(1, [2,3]), (10,[20,30]), (1,[5,6])]))
+    {1: [2, 3, 5, 6], 10: [20, 30]}
     """
 
     groups = {}
@@ -215,3 +224,20 @@ def func2dict(func, sequence):
     {65: 'A', 66: 'B', 67: 'C', 68: 'D', 69: 'E'}
     """
     return {k: func(k) for k in sequence}
+
+
+def list2dict(func, items):
+    """
+    >>> import operator
+    >>> list2dict(operator.add, [(1, [2,3]), (10,[20,30]), (1,[5,6])])
+    {1: [2, 3, 5, 6], 10: [20, 30]}
+    >>> list2dict(operator.mul, [(1, 2), (10,20), (1,5)])
+    {1: 10, 10: 20}
+    """
+    d = {}
+    for k, v in items:
+        if k in d:
+            d[k] = func(d[k], v)
+        else:
+            d[k] = v
+    return d
