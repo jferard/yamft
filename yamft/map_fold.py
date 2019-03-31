@@ -151,3 +151,62 @@ def reduce_r(function, sequence, lazy_last=None):
         else:
             return lazy_last()
 
+
+def map_keys(func, d):
+    """
+
+    >>> from yamft import square
+    >>> map_keys(square, {1:1, 2:2, 3:3})
+    {1: 1, 4: 2, 9: 3}
+
+    """
+    return {func(k): v for k, v in d.items()}
+
+
+def map_values(func, d):
+    """
+
+    >>> from yamft import square
+    >>> map_values(square, {1:1, 2:2, 3:3})
+    {1: 1, 2: 4, 3: 9}
+
+    >>> from functools import partial
+    >>> from yamft import split1
+    >>> map_values(int, dict(map(split1('='), "A=5,B=7".split(','))))
+    {'A': 5, 'B': 7}
+
+    """
+    return {k: func(v) for k, v in d.items()}
+
+
+def map_fst(func, items):
+    """
+    >>> list(map_fst(ord, [('A',1,1,1), ('B',2,2,2)]))
+    [(65, 1, 1, 1), (66, 2, 2, 2)]
+    """
+
+    return ((func(one), *other) for one, *other in items)
+
+
+def map_snd(func, items):
+    """
+    >>> list(map_snd(ord, [(1,'A',1,1), (2,'B',2,2)]))
+    [(1, 65, 1, 1), (2, 66, 2, 2)]
+    """
+    return ((one, func(two), *other) for one, two, *other in items)
+
+
+def map_thd(func, items):
+    """
+    >>> list(map_thd(ord, [(1,1,'A',1), (2,2,'B',2)]))
+    [(1, 1, 65, 1), (2, 2, 66, 2)]
+    """
+    return ((one, two, func(three), *other) for one, two, three, *other in items)
+
+
+def map_fth(func, items):
+    """
+    >>> list(map_fth(ord, [(1,1,1,'A'), (2,2,2,'B')]))
+    [(1, 1, 1, 65), (2, 2, 2, 66)]
+    """
+    return ((one, two, three, func(four), *other) for one, two, three, four, *other in items)

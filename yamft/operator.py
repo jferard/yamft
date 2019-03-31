@@ -44,7 +44,8 @@ __all__ = ['add1', 'and1', 'bw_and1', 'bw_or1', 'concat1', 'contains1', 'countOf
            'delitem1', 'eq1', 'floordiv1', 'ge1', 'getitem1', 'gt1',
            'iconcat1', 'imatmul1', 'indexOf1', 'is1', 'is_not1', 'le1',
            'lt1', 'matmul1', 'mod1', 'mul1', 'ne1', 'or1', 'pow1',
-           'rshift1', 'setitem1', 'sub1', 'truediv1', 'xor1']
+           'rshift1', 'setitem1', 'sub1', 'truediv1', 'xor1',
+           'dget', 'square', 'cube', 'split1']
 
 
 from yamft import yamft_wraps
@@ -214,6 +215,14 @@ def pow1(b):
     return wrapped
 
 
+def square(i):
+    return i*i
+
+
+def cube(i):
+    return i*i*i
+
+
 def rshift1(b):
     """Return a function a -> a >> b."""
     @yamft_wraps(f"rshift_{b}", f"Same as a >> {b}.")
@@ -375,3 +384,11 @@ def cons(a, b):
 
 def lazy_cons(a, b):
     return [a] + b()
+
+
+def dget(k, d=None):
+    return lambda D: D.get(k, d)
+
+
+def split1(sep=None, maxsplits=-1):
+    return lambda s: s.split(sep, maxsplits)

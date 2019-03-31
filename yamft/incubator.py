@@ -17,6 +17,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from functools import partial
+from itertools import tee
 from yamft import fst, snd, dot
 
 
@@ -137,3 +138,55 @@ def filter_map(func, iterable):
     [1.0, 3.0, 4.0]
     """
     return map(fst, filter(lambda e: snd(e) is None, map(func, iterable)))
+
+
+def group_by(key, iterable):
+    """Group elements by key
+
+    >>> from yamft import mod1
+    >>> group_by(mod1(2), range(10))
+    {0: [0, 2, 4, 6, 8], 1: [1, 3, 5, 7, 9]}
+    """
+
+    groups = {}
+    for element in iterable:
+        groups.setdefault(key(element), []).append(element)
+    return groups
+
+
+def merge(*dicts):
+    """
+
+    >>> merge({1:2}, {3:4}, {3:6})
+    {1: 2, 3: 6}
+    """
+
+    merged = {}
+    for d in dicts:
+        merged.update(d)
+    return merged
+
+
+def auto_zip(iterable, *funcs):
+    """
+
+    >>> dict(auto_zip(range(5), str))
+    {0: '0', 1: '1', 2: '2', 3: '3', 4: '4'}
+    >>> from operator import neg
+    >>> list(auto_zip(range(1, 4), str, neg))
+    [(1, '1', -1), (2, '2', -2), (3, '3', -3)]
+
+    >>> from yamft import square
+    >>> dict(auto_zip(range(4), square))
+    {0: 0, 1: 1, 2: 4, 3: 9}
+
+    >>> dict(auto_zip(range(4)))
+    {0: 0, 1: 1, 2: 2, 3: 3}
+     """
+
+    if funcs:
+        it, *its = tee(iterable, len(funcs)+1)
+        new_its = [map(func, it) for func, it in zip(funcs, its)]
+        return zip(it, *new_its)
+    else:
+        return ((e, e) for e in iterable)
