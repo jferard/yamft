@@ -207,3 +207,11 @@ def dict_filter(key, d):
     else:
         s = set(key)
         return {k: v for k, v in d.items() if k in s}
+
+
+def func2dict(func, sequence):
+    """
+    >>> func2dict(chr, range(65, 70))
+    {65: 'A', 66: 'B', 67: 'C', 68: 'D', 69: 'E'}
+    """
+    return {k: func(k) for k in sequence}
