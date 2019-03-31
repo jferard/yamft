@@ -392,3 +392,14 @@ def dget(k, d=None):
 
 def split1(sep=None, maxsplits=-1):
     return lambda s: s.split(sep, maxsplits)
+
+
+def destr(sequence):
+    """
+
+    >>> destr([1,2,3])
+    (1, [2, 3])
+    >>> dict(map(destr, [[1,2,3], [4,5,6]]))
+    {1: [2, 3], 4: [5, 6]}
+    """
+    return sequence[0], sequence[1:]
